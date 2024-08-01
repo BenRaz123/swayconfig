@@ -1,20 +1,14 @@
-#default_border pixel 4
+set $mod Mod4
+font pango:DejaVuSans 13
 
-input "type:keyboard" {
-    xkb_layout us,il
-    xkb_options grp:caps_toggle
-}
-
-font pango:DejaVuSansMono 12
-
-#gaps inner 10
+bindswitch lid:on exec swaymsg output eDP-1 disable
+bindswitch lid:off exec swaymsg output eDP-1 enable 
 #gaps left 50
 #gaps right 50
 #gaps top 30
 #gaps bottom 30
 
-set $mod Mod1
-
+bindsym XF86Calculator exec --no-startup-id gnome-calculator
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2%
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2%-
 
@@ -22,12 +16,17 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec pactl set-sink-mute @DEFAULT_SINK@ 0
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-output * bg /home/ben/Downloads/walp.jpg fill
+output * bg /home/ben/Downloads/walpaper.jpg fill
 bindsym $mod+Shift+x exec --no-startup-id swaylock --font "DejaVu Sans"
 bindsym $mod+Shift+f exec --no-startup-id firefox 
-bindsym $mod+Tab exec --no-startup-id chromium-browser
-bindsym $mod+Shift+s exec --no-startup-id grim hello.png
 bindsym $mod+Shift+Return exec --no-startup-id chromium-browser
+
+input type:keyboard {
+    xkb_layout us,il,us(mac)
+    xkb_options grp:caps_toggle,altwin:swap_lalt_lwin
+}
+
+
 # Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
@@ -48,7 +47,7 @@ set $term foot
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 #set $menu dmenu_path | wmenu | xargs swaymsg exec --
-set $menu bemenu-run -p "" --fn "MySevkaNerdFont" --nb "#0e1019" --nf "#a6accd" --ab "#0e1019" --af "#a6accd" --hb "#89dcff" --hf "#0e1019" --hp 10 
+set $menu bemenu-run -p "" --fn "DejaVuSans Bold" --nb "#0e1019" --nf "#a6accd" --ab "#0e1019" --af "#a6accd" --hb "#89dcff" --hf "#0e1019" --hp 10 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
@@ -63,10 +62,10 @@ set $menu bemenu-run -p "" --fn "MySevkaNerdFont" --nb "#0e1019" --nf "#a6accd" 
 #
 # Example configuration:
 #
-#exec swayidle -w \
-#         timeout 300 'swaylock --font "DejaVu Sans"' \
-#         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-#         before-sleep 'swaylock --font "DejaVu Sans"'
+exec swayidle -w \
+         timeout 300 'swaylock --font "DejaVu Sans"' \
+         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+         before-sleep 'swaylock --font "DejaVu Sans"'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -105,7 +104,7 @@ set $menu bemenu-run -p "" --fn "MySevkaNerdFont" --nb "#0e1019" --nf "#a6accd" 
     # Change normal to inverse to use left mouse button for resizing and right
     # mouse button for dragging.
     floating_modifier $mod normal
-
+    
     # Reload the configuration file
     bindsym $mod+Shift+c reload
 
@@ -138,28 +137,33 @@ set $menu bemenu-run -p "" --fn "MySevkaNerdFont" --nb "#0e1019" --nf "#a6accd" 
 #
 # Workspaces:
 #
+    set $ws1 Term
+    set $ws2 Browse
+    set $ws3 "עברית" 
+    set $ws10 Empty
+
     # Switch to workspace
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
+    bindsym $mod+1 workspace $ws1 
+    bindsym $mod+2 workspace $ws2
+    bindsym $mod+3 workspace $ws3
     bindsym $mod+4 workspace number 4
     bindsym $mod+5 workspace number 5
     bindsym $mod+6 workspace number 6
     bindsym $mod+7 workspace number 7
     bindsym $mod+8 workspace number 8
     bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
+    bindsym $mod+0 workspace $ws10
     # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+1 move container to workspace $ws1 
+    bindsym $mod+Shift+2 move container to workspace $ws2
+    bindsym $mod+Shift+3 move container to workspace $ws3
     bindsym $mod+Shift+4 move container to workspace number 4
     bindsym $mod+Shift+5 move container to workspace number 5
     bindsym $mod+Shift+6 move container to workspace number 6
     bindsym $mod+Shift+7 move container to workspace number 7
     bindsym $mod+Shift+8 move container to workspace number 8
     bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
+    bindsym $mod+Shift+0 move container to workspace $ws10
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
 #
@@ -230,13 +234,13 @@ bindsym $mod+r mode "resize"
 # Read `man 5 sway-bar` for more information about this section.
 bar {
     position bottom 
-
+    font DejaVuSans Bold 14
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command while echo "󰌌  $(swaygetkbd) \| 󰕾 $(fish -c 'get_volume') \|  $(fish -c 'brightness') \|  $(fish -c 'get_battery_thing_no_color') \| 󰃭 $(TZ='America/New_York' date -R) \|   $(TZ='America/New_York' date +'%X')"; do sleep 1; done
+    status_command while echo "KBD: $(swaygetkbd) \| VOL: $(fish -c 'get_volume') \| BRT: $(fish -c 'brightness') \| BAT: $(fish -c 'get_battery_thing_no_color') \| TIME: $(TZ='America/New_York' date -R)"; do sleep 1; done
 
     colors {
-        focused_background #000000
+        focused_background #0e1019
         focused_workspace #89dcff #89dcff #0e1019
         statusline #ffffff
         background #0e1019
