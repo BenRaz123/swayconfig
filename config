@@ -1,11 +1,13 @@
 #default_border pixel 4
+bindswitch lid:on exec swaymsg output eDP-1 disable
+bindswitch lid:off exec swaymsg output eDP-1 enable 
 
 input "type:keyboard" {
     xkb_layout us,il
     xkb_options grp:caps_toggle
 }
 
-font pango:DejaVuSansMono 12
+font pango:DejaVuSansMono Bold 14
 
 #gaps inner 10
 #gaps left 50
