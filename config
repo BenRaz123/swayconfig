@@ -3,7 +3,7 @@ client.unfocused #1f2337 #0E1019 #A6ACCD
 client.focused_inactive #1f2337 #0e1019 #ffffff 
 titlebar_padding 10 4
 
-for_window [title="."] title_format "<b>%title</b> {#%app_id}"
+for_window [title="."] title_format "<b>>%title</b> {#%app_id}"
 set $mod Mod4
 font pango:DejaVuSans 14 
 
