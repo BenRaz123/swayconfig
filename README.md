@@ -1,5 +1,7 @@
 # Sway WM Configuration
 
+![Sample](sway.png)
+
 ## About
 
 [`Sway`](https://swaywm.org) is a [tiling](https://en.wikipedia.org/wiki/Tiling_window_manager) window manager for Wayland that emulates the features of [`i3wm`](https://i3wm.org/), plus some extra features.
