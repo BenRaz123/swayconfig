@@ -129,6 +129,7 @@ mode resize {
 bindsym $mod+r mode resize
 
 bar {
+    mode hide
     position bottom 
     font DejaVuSans 14
 
