@@ -20,8 +20,7 @@ bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 output * bg /home/ben/Downloads/walpaper.jpg fill
 bindsym $mod+Shift+x exec --no-startup-id swaylock --font "DejaVu Sans"
-bindsym $mod+Shift+f exec --no-startup-id firefox 
-bindsym $mod+Shift+Return exec --no-startup-id chromium-browser
+bindsym $mod+Shift+Return exec --no-startup-id qutebrowser 
 
 input type:keyboard {
     xkb_layout us(mac),il
