@@ -1,14 +1,47 @@
-client.focused #13b9ff #89DCFF #0E1019
+include /etc/sway/config.d/*
+
+set $color #ffcb6b
+
+bindsym Print exec --no-startup-id obs
+
+bindsym KP_Left seat - cursor move -40 0
+bindsym KP_Right seat - cursor move 40 0
+bindsym KP_Up seat - cursor move 0 -40
+bindsym KP_Down seat - cursor move 0 40
+
+
+bindsym Shift+KP_Left seat - cursor move -10 0
+bindsym Shift+KP_Right seat - cursor move 10 0
+bindsym Shift+KP_Up seat - cursor move 0 -10
+bindsym Shift+KP_Down seat - cursor move 0 10
+
+bindsym KP_Begin seat - cursor press BTN_LEFT; seat - cursor release BTN_LEFT
+bindsym Num_Lock seat - cursor set 0 0
+bindsym KP_Enter seat - cursor press BTN_RIGHT; seat - cursor release BTN_RIGHT
+
+bindsym KP_Insert seat - cursor press BTN_LEFT
+bindsym KP_Delete seat - cursor release BTN_LEFT
+
+#gaps inner 9 
+#gaps outer 0
+
+client.focused $color $color #0E1019
 client.unfocused #1f2337 #0E1019 #A6ACCD
 client.focused_inactive #1f2337 #0e1019 #ffffff 
 titlebar_padding 10 4
 
-for_window [title="."] title_format "<b>>%title</b> {#%app_id}"
+set $font pango:DejaVu Sans 13
+
+for_window [title="."] title_format "<b>>%title</b> {*%app_id}"
+
 set $mod Mod4
-font pango:DejaVuSans 14 
+
+font $font 
 
 bindswitch lid:on exec swaymsg output eDP-1 disable
 bindswitch lid:off exec swaymsg output eDP-1 enable 
+
+bindsym $mod+Shift+p exec --no-startup-id poweroff
 
 bindsym XF86Calculator exec --no-startup-id gnome-calculator
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2%
@@ -18,13 +51,27 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec pactl set-sink-mute @DEFAULT_SINK@ 0
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-output * bg /home/ben/Downloads/walpaper.jpg fill
-bindsym $mod+Shift+x exec --no-startup-id swaylock --font "DejaVu Sans"
+output * bg /home/ben/leaf.jpg fill
+
+bindsym $mod+Shift+s exec --no-startup-id systemctl suspend
+bindsym $mod+Shift+x exec --no-startup-id swaylock \
+	--screenshots \
+	--indicator-radius 100 \
+	--indicator-thickness 7 \
+	--effect-blur 7x5 \
+	--effect-vignette 0.5:0.5 \
+    --font "DejaVu Sans" \
+    --fade-in 2s\
+    --grace 2s
 bindsym $mod+Shift+Return exec --no-startup-id qutebrowser 
+
+# Bt headphones
+bindsym $mod+b exec --no-startup-id bluetoothctl connect '74:2A:8A:56:71:50' 
+bindsym $mod+Shift+b exec --no-startup-id bluetoothctl disconnect '74:2A:8A:56:71:50' 
 
 input type:keyboard {
     xkb_layout us(mac),il
-    xkb_options grp:caps_toggle,altwin:swap_lalt_lwin
+    xkb_options altwin:swap_lalt_lwin,grp:caps_toggle,keypad:pointerkeys,grp:alt_shift_toggle,mousekeys:enable,
 }
 
 set $left j
@@ -32,12 +79,12 @@ set $down k
 set $up l
 set $right semicolon
 set $term foot
-set $menu bemenu-run -p "" --fn "DejaVuSans Bold" --nb "#0e1019" --nf "#a6accd" --ab "#0e1019" --af "#a6accd" --hb "#89dcff" --hf "#0e1019" --hp 10 
+set $menu bemenu-run -p "" --fn "Monaspace Krypton Bold" --nb "#0e1019" --nf "#a6accd" --ab "#0e1019" --af "#a6accd" --hb "#89dcff" --hf "#0e1019" --hp 10 
 
-exec swayidle -w \
-         timeout 300 'swaylock --font "DejaVu Sans"' \
-         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-         before-sleep 'swaylock --font "DejaVu Sans"'
+#exec swayidle -w 
+#         timeout 300 'swaylock --font "DejaVu Sans"' \
+#         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#         before-sleep 'swaylock --font "DejaVu Sans"'
 
 bindsym $mod+Return exec $term
 
@@ -69,32 +116,27 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-set $ws1 Term
-set $ws2 Browse
-set $ws3 "עברית" 
-set $ws10 Empty
-
-bindsym $mod+1 workspace $ws1 
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
+bindsym $mod+1 workspace number 1 
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
 bindsym $mod+4 workspace number 4
 bindsym $mod+5 workspace number 5
 bindsym $mod+6 workspace number 6
 bindsym $mod+7 workspace number 7
 bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace $ws10
+bindsym $mod+0 workspace number 10
 
-bindsym $mod+Shift+1 move container to workspace $ws1 
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+1 move container to workspace number 1 
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
 bindsym $mod+Shift+4 move container to workspace number 4
 bindsym $mod+Shift+5 move container to workspace number 5
 bindsym $mod+Shift+6 move container to workspace number 6
 bindsym $mod+Shift+7 move container to workspace number 7
 bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
-bindsym $mod+Shift+0 move container to workspace $ws10
+bindsym $mod+Shift+0 move container to workspace number 10
 
 bindsym $mod+h splith
 bindsym $mod+v splitv
@@ -128,20 +170,18 @@ mode resize {
 bindsym $mod+r mode resize
 
 bar {
-    mode hide
-    position bottom 
-    font DejaVuSans 14
+    position top 
+    font $font
 
-    status_command while echo "KBD: $(swaygetkbd) \| VOL: $(fish -c 'get_volume') \| BRT: $(fish -c 'brightness') \| BAT: $(fish -c 'get_battery_thing_no_color') \| TIME: $(TZ='America/New_York' date -R)"; do sleep 1; done
+    status_command while echo "KBD: $(swaygetkbd) \| VOL: $(fish -c 'get_volume') \| BRT: $(fish -c 'brightness') \| BAT: $(fish -c 'get_battery_thing_no_color') \| TIME: $(TZ='America/New_York' date -R) $(TZ='America/New_York' date -I)"; do sleep 1; done
 
     colors {
         focused_background #0e1019
-        focused_workspace #89dcff #89dcff #0e1019
-        statusline #ffffff
+        focused_workspace $color $color #0e1019
+        statusline #a6accd
         background #0e1019
-        inactive_workspace #222222 #222222 #ffffff 
+        inactive_workspace #1f2337 #0e1019 #a6accd
     }
 }
 
 # Don't know what it does but dont touch
-include @sysconfdir@/sway/config.d/*
