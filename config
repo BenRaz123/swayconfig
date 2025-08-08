@@ -1,6 +1,27 @@
 include /etc/sway/config.d/*
 
-set $color #ffcb6b
+# See ~/.config/fish/config.fish for function
+# For monitoring kb changes of layout
+#exec_always fish -c kill_monkbd_ps;
+exec_always swaync
+exec_always fcitx5 -d
+exec_always fish -c "kill_monkbd_ps"
+exec_always nohup fish -c mon_kbd &
+
+set $color #89DDFF
+set $bgcolor #0e1019
+
+bindsym XF86AudioPlay exec fish -c 'playerctl play-pause; sleep 0.1; zenity --notification --text "$(if_playing_else 'Playing' 'Paused'): $(get_song)"; echo -n "p" > /tmp/player.pipe'
+bindsym XF86AudioPrev exec fish -c 'playerctl previous; sleep 0.1; zenity --notification --text "\<\<FF: $(get_song)"'
+bindsym XF86AudioNext exec fish -c 'playerctl next; sleep 0.1; zenity --notification --text "\>\>FF: $(get_song)"'
+
+bindsym Ctrl+XF86AudioPlay exec fish -c 'zenity --notification --text "PLAYING: $(get_song)"'
+bindsym Shift+XF86AudioPrev exec fish -c 'move_backward_music'
+bindsym Shift+XF86AudioNext exec fish -c 'move_forward_music'
+bindsym Shift+XF86AudioPlay exec fish -c 'playerctl stop; quit_music'
+
+# used by JBL LIVE 460NC
+bindsym XF86AudioPause exec fish -c 'zenity --notification --text "P/P: $(get_song)"; echo -n "p" > /tmp/player.pipe'
 
 bindsym Print exec --no-startup-id obs
 
@@ -8,7 +29,6 @@ bindsym KP_Left seat - cursor move -40 0
 bindsym KP_Right seat - cursor move 40 0
 bindsym KP_Up seat - cursor move 0 -40
 bindsym KP_Down seat - cursor move 0 40
-
 
 bindsym Shift+KP_Left seat - cursor move -10 0
 bindsym Shift+KP_Right seat - cursor move 10 0
@@ -22,17 +42,26 @@ bindsym KP_Enter seat - cursor press BTN_RIGHT; seat - cursor release BTN_RIGHT
 bindsym KP_Insert seat - cursor press BTN_LEFT
 bindsym KP_Delete seat - cursor release BTN_LEFT
 
-#gaps inner 9 
+gaps inner 30
+
+#gaps inner 50 
 #gaps outer 0
 
-client.focused $color $color #0E1019
-client.unfocused #1f2337 #0E1019 #A6ACCD
-client.focused_inactive #1f2337 #0e1019 #ffffff 
+#gaps inner 30
+#gaps outer 50
+
+client.focused $color $color $bgcolor
+client.unfocused #1f2337 $bgcolor #A6ACCD
+client.focused_inactive #1f2337 $bgcolor #ffffff 
 titlebar_padding 10 4
 
-set $font pango:DejaVu Sans 13
+#set $font pango:DejaVu Sans 13 
+
+set $font pango:DejaVu Sans 11
+
 
 for_window [title="."] title_format "<b>>%title</b> {*%app_id}"
+for_window [shell="xwayland"] title_format "[XWAYLAND] <b>%title</b>"
 
 set $mod Mod4
 
@@ -51,7 +80,16 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%; exec
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%; exec pactl set-sink-mute @DEFAULT_SINK@ 0
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-output * bg /home/ben/leaf.jpg fill
+#output * bg /home/ben/azul.jpg fill
+#output * bg /home/ben/itsukushima.jpg fill
+#output * bg /home/ben/takachiho.jpg fill
+#output * bg /home/ben/Downloads/river.jpg fill
+#output * bg /home/ben/Downloads/ice.png fill
+#output * bg /home/ben/aero.jpg fill
+#output * bg /home/ben/sky.jpg fill
+#output * bg /home/ben/meadow.jpg fill
+output * bg /home/ben/wall.jpg fill
+
 
 bindsym $mod+Shift+s exec --no-startup-id systemctl suspend
 bindsym $mod+Shift+x exec --no-startup-id swaylock \
@@ -61,17 +99,22 @@ bindsym $mod+Shift+x exec --no-startup-id swaylock \
 	--effect-blur 7x5 \
 	--effect-vignette 0.5:0.5 \
     --font "DejaVu Sans" \
-    --fade-in 2s\
-    --grace 2s
+#   --fade-in 2s\
+#   --grace 2s
+
 bindsym $mod+Shift+Return exec --no-startup-id qutebrowser 
+bindsym $mod+Shift+d exec fish -c set_dark_mode
+bindsym $mod+Shift+l exec fish -c set_light_mode
+
+bindsym $mod+c exec swaync-client -C
 
 # Bt headphones
-bindsym $mod+b exec --no-startup-id bluetoothctl connect '74:2A:8A:56:71:50' 
-bindsym $mod+Shift+b exec --no-startup-id bluetoothctl disconnect '74:2A:8A:56:71:50' 
+bindsym $mod+b exec bluetoothctl connect '68:59:32:3C:70:54' 
+bindsym $mod+Shift+b exec --no-startup-id bluetoothctl disconnect '68:59:32:3C:70:54' 
 
 input type:keyboard {
     xkb_layout us(mac),il
-    xkb_options altwin:swap_lalt_lwin,grp:caps_toggle,keypad:pointerkeys,grp:alt_shift_toggle,mousekeys:enable,
+    xkb_options altwin:swap_lalt_lwin,grp:caps_toggle,keypad:pointerkeys,mousekeys:enable,
 }
 
 set $left j
@@ -79,7 +122,8 @@ set $down k
 set $up l
 set $right semicolon
 set $term foot
-set $menu bemenu-run -p "" --fn "Monaspace Krypton Bold" --nb "#0e1019" --nf "#a6accd" --ab "#0e1019" --af "#a6accd" --hb "#89dcff" --hf "#0e1019" --hp 10 
+set $menu bemenu-run -p "" --fn "DejaVu Sans 14" --nb "$bgcolor" --nf "#a6accd" --ab "$bgcolor" --af "#a6accd" --hb "#89dcff" --hf "$bgcolor" --hp 10 
+set $menu2 i3-dmenu-desktop
 
 #exec swayidle -w 
 #         timeout 300 'swaylock --font "DejaVu Sans"' \
@@ -88,9 +132,11 @@ set $menu bemenu-run -p "" --fn "Monaspace Krypton Bold" --nb "#0e1019" --nf "#a
 
 bindsym $mod+Return exec $term
 
-bindsym $mod+Shift+q kill
+bindsym $mod+q kill
 
 bindsym $mod+d exec $menu
+bindsym XF86Search exec $menu
+bindsym $mod+Shift+f exec $menu2
 
 floating_modifier $mod normal
 
@@ -100,7 +146,7 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
 
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down
-bindsym $mod+$up focus up
+#bindsym $mod+$up focus up
 bindsym $mod+$right focus right
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
@@ -109,7 +155,7 @@ bindsym $mod+Right focus right
 
 bindsym $mod+Shift+$left move left
 bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
+#bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
@@ -145,6 +191,9 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 bindsym $mod+f fullscreen
 
+# FOR REMOTE
+bindsym Shift+F5 fullscreen
+
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
@@ -158,10 +207,10 @@ mode resize {
     bindsym $up resize shrink height 10px
     bindsym $right resize grow width 10px
 
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
+    bindsym Right resize shrink width 10px
+    bindsym Up resize grow height 10px
+    bindsym Down resize shrink height 10px
+    bindsym Left resize grow width 10px
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -173,14 +222,21 @@ bar {
     position top 
     font $font
 
-    status_command while echo "KBD: $(swaygetkbd) \| VOL: $(fish -c 'get_volume') \| BRT: $(fish -c 'brightness') \| BAT: $(fish -c 'get_battery_thing_no_color') \| TIME: $(TZ='America/New_York' date -R) $(TZ='America/New_York' date -I)"; do sleep 1; done
+    status_command while echo "\
+    \<\<$(whoami)@$(hostname)\>\> \
+    \<KBD $(swaygetkbd)\>\
+    \<VOL $(fish -c 'get_volume')\>\
+    \<BRT $(fish -c 'brightness')\>\
+    \<BAT $(fish -c 'get_battery_thing_no_color')\>\
+    \<TIME $(TZ='America/New_York' date -R) $(TZ='America/New_York' date -I)\>\
+    "; do sleep 1; done
 
     colors {
-        focused_background #0e1019
-        focused_workspace $color $color #0e1019
+        focused_background $bgcolor 
+        focused_workspace $color $color $bgcolor
         statusline #a6accd
-        background #0e1019
-        inactive_workspace #1f2337 #0e1019 #a6accd
+        background $bgcolor
+        inactive_workspace #1f2337 $bgcolor #a6accd
     }
 }
 
