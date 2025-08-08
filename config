@@ -61,6 +61,7 @@ set $font pango:DejaVu Sans 11
 
 
 for_window [title="."] title_format "<b>>%title</b> {*%app_id}"
+for_window [app_id="foot"] border pixel 2
 for_window [shell="xwayland"] title_format "[XWAYLAND] <b>%title</b>"
 
 set $mod Mod4
